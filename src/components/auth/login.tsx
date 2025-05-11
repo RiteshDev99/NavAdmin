@@ -1,11 +1,33 @@
-import {SafeAreaView, View, Text, StyleSheet, TextInput, useColorScheme} from "react-native";
+import {SafeAreaView, View, Text, StyleSheet, TextInput, useColorScheme, Alert} from "react-native";
 import MyButton from "@/src/components/ui/button";
 import { useRouter } from "expo-router";
 import {themeColors} from "@/src/constants/color";
+import {useState} from "react";
+import {account} from "@/src/lib/appwrite";
 const Login = () => {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+
+
+    const handleLogin = async () => {
+        try {
+            await account.deleteSession("current");
+
+            await account.createEmailPasswordSession(email, password);
+
+            Alert.alert("Login successful!");
+            router.push("/home");
+        } catch (error: any) {
+            Alert.alert("Login Error", error.message || "Something went wrong");
+        }
+    };
+
+
+
+
     const colorScheme = useColorScheme();
-
-
     const backgroundColor =
         colorScheme === 'light'
             ? themeColors.light.backgroundColor
@@ -17,9 +39,7 @@ const Login = () => {
 
 
     const router = useRouter();
-    const onLogin = () => {
-        alert("Logged in successfully!");
-    };
+
 
     const goToSignup = () => {
         router.navigate("/signup");
@@ -34,12 +54,16 @@ const Login = () => {
                 <TextInput
                     placeholder="Email Address"
                     placeholderTextColor= {subheadingColor}
+                    value={email}
+                    onChangeText={setEmail}
                     style={[styles.input,{backgroundColor: inputFieldColor, color: inputFieldTextColor}]}
                     keyboardType="email-address"
                 />
                 <TextInput
                     placeholder="Password"
                     placeholderTextColor= {subheadingColor}
+                    value={password}
+                    onChangeText={setPassword}
                     style={[styles.input,{backgroundColor: inputFieldColor, color: inputFieldTextColor}]}
                     secureTextEntry
                 />
@@ -48,7 +72,7 @@ const Login = () => {
                     title="Login"
                     backgroundColor="#FF6347"
                     textColor="#fff"
-                    onPress={onLogin}
+                    onPress={handleLogin}
                 />
 
                 <Text style={[styles.signupText,{color:subheadingColor}]}>

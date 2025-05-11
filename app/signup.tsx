@@ -1,11 +1,16 @@
 import React from "react";
-import {SafeAreaView, View, StyleSheet} from "react-native";
+import {SafeAreaView, View, StyleSheet, useColorScheme} from "react-native";
 import SignUp from "@/src/components/auth/signup";
+import {themeColors} from "@/src/constants/color";
 
 const Model = () => {
-
+    const colorScheme = useColorScheme();
+    const backgroundColor =
+        colorScheme === 'light'
+            ? themeColors.light.backgroundColor
+            : themeColors.dark.backgroundColor;
     return (
-        <SafeAreaView style={[styles.safeArea, ]}>
+        <SafeAreaView style={[styles.safeArea,{backgroundColor: backgroundColor} ]}>
             <View style={styles.container}>
                 <SignUp/>
             </View>

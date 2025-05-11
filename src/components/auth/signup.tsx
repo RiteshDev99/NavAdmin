@@ -1,13 +1,31 @@
-import {SafeAreaView, View, Text, StyleSheet, TextInput, useColorScheme} from "react-native";
+import {SafeAreaView, View, Text, StyleSheet, TextInput, useColorScheme, Alert} from "react-native";
 import MyButton from "@/src/components/ui/button";
 import { useRouter } from "expo-router";
 import {themeColors} from "@/src/constants/color";
+import {useState} from "react";
+import {account} from "@/src/lib/appwrite";
+import {ID} from "appwrite";
 
 
 const SignUp = () => {
 
-    const colorScheme = useColorScheme();
 
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSignup = async () => {
+        try {
+            await account.create(ID.unique(), email, password, name);
+            Alert.alert("Signup successful! Please log in.");
+            router.replace("/login");
+        } catch (error: any) {
+            Alert.alert("Signup Error", error.message || "Something went wrong");
+        }
+    };
+
+
+    const colorScheme = useColorScheme();
     const backgroundColor =
         colorScheme === 'light'
             ? themeColors.light.backgroundColor
@@ -31,17 +49,23 @@ const SignUp = () => {
                 <TextInput
                     placeholder="Full Name"
                     placeholderTextColor= {subheadingColor}
+                    value={name}
+                    onChangeText={setName}
                     style={[styles.input,{backgroundColor: inputFieldColor, color: inputFieldTextColor}]}
                 />
                 <TextInput
                     placeholder="Email Address"
                     placeholderTextColor= {subheadingColor}
+                    value={email}
+                    onChangeText={setEmail}
                     style={[styles.input,{backgroundColor: inputFieldColor,color: inputFieldTextColor}]}
                     keyboardType="email-address"
                 />
                 <TextInput
                     placeholder="Password"
                     placeholderTextColor= {subheadingColor}
+                    value={password}
+                    onChangeText={setPassword}
                     style={[styles.input,{backgroundColor: inputFieldColor, color: inputFieldTextColor}]}
                     secureTextEntry
                 />
@@ -50,7 +74,7 @@ const SignUp = () => {
                     title="Sign Up"
                     backgroundColor="#FF6347"
                     textColor="#fff"
-                    onPress={onRegister}
+                    onPress={handleSignup}
                 />
 
                 <Text style={[styles.loginText,{color:subheadingColor}]}>
