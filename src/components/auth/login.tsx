@@ -4,25 +4,49 @@ import { useRouter } from "expo-router";
 import {themeColors} from "@/src/constants/color";
 import {useState} from "react";
 import {account} from "@/src/lib/appwrite";
+import {Models} from "appwrite";
 const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [Loading, setLoading] = useState(false);
+    const [session, setSession] = useState<Models.Session | null>(null);
+    const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
 
+
+    // const handleLogin = async () => {
+    //     try {
+    //         await account.deleteSession("current");
+    //
+    //         await account.createEmailPasswordSession(email, password);
+    //
+    //         Alert.alert("Login successful!");
+    //         router.push("/home");
+    //     } catch (error: any) {
+    //         Alert.alert("Login Error", error.message || "Something went wrong");
+    //     }
+    // };
 
 
     const handleLogin = async () => {
+        setLoading(true);
         try {
-            await account.deleteSession("current");
+            const responseSession = await account.createEmailPasswordSession(email, password);
+            const responseUser = await account.get();
 
-            await account.createEmailPasswordSession(email, password);
 
-            Alert.alert("Login successful!");
+            setSession(responseSession);
+            setUser(responseUser);
+
             router.push("/home");
         } catch (error: any) {
+            console.log(error);
             Alert.alert("Login Error", error.message || "Something went wrong");
+        } finally {
+            setLoading(false);
         }
     };
+
 
 
 
