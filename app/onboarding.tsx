@@ -5,7 +5,7 @@ import {themeColors} from "@/src/constants/color";
 
 const { width } = Dimensions.get("window");
 
-export default function Index() {
+export default function Onboarding() {
     const router = useRouter();
     const colorScheme = useColorScheme();
     const backgroundColor =
@@ -15,7 +15,7 @@ export default function Index() {
     const textColor = colorScheme === 'light' ? themeColors.light.text : themeColors.dark.text;
     const subTitleColor = colorScheme === 'light' ? themeColors.light.subtitle : themeColors.dark.subtitle;
     const OnContinue = () => {
-        router.navigate("/login");
+        router.navigate("/signin");
     };
 
     return (

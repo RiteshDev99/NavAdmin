@@ -1,57 +1,31 @@
 import {SafeAreaView, View, Text, StyleSheet, TextInput, useColorScheme, Alert} from "react-native";
 import MyButton from "@/src/components/ui/button";
-import { useRouter } from "expo-router";
+import {Redirect, useRouter} from "expo-router";
 import {themeColors} from "@/src/constants/color";
 import {useState} from "react";
-import {account} from "@/src/lib/appwrite";
-import {Models} from "appwrite";
-const Login = () => {
+import {useAuth} from "@/src/context/authContext";
+const Signin = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [Loading, setLoading] = useState(false);
-    const [session, setSession] = useState<Models.Session | null>(null);
-    const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+    const router = useRouter();
+    const colorScheme = useColorScheme();
+
+    const {session, signin,  } = useAuth();
+    if(session) return  <Redirect href={"/"} />
 
 
-    // const handleLogin = async () => {
-    //     try {
-    //         await account.deleteSession("current");
-    //
-    //         await account.createEmailPasswordSession(email, password);
-    //
-    //         Alert.alert("Login successful!");
-    //         router.push("/home");
-    //     } catch (error: any) {
-    //         Alert.alert("Login Error", error.message || "Something went wrong");
-    //     }
-    // };
+
 
 
     const handleLogin = async () => {
-        setLoading(true);
-        try {
-            const responseSession = await account.createEmailPasswordSession(email, password);
-            const responseUser = await account.get();
-
-
-            setSession(responseSession);
-            setUser(responseUser);
-
-            router.push("/home");
-        } catch (error: any) {
-            console.log(error);
-            Alert.alert("Login Error", error.message || "Something went wrong");
-        } finally {
-            setLoading(false);
-        }
+        signin({email, password});
     };
 
 
 
 
 
-    const colorScheme = useColorScheme();
     const backgroundColor =
         colorScheme === 'light'
             ? themeColors.light.backgroundColor
@@ -62,7 +36,6 @@ const Login = () => {
     const inputFieldTextColor = colorScheme === 'light' ? themeColors.light.inputFieldTextColor : themeColors.dark.inputFieldTextColor;
 
 
-    const router = useRouter();
 
 
     const goToSignup = () => {
@@ -73,7 +46,7 @@ const Login = () => {
         <SafeAreaView style={[styles.container,{backgroundColor: backgroundColor}]}>
             <View style={styles.innerContainer}>
                 <Text style={[styles.heading, {color: headingColor}]}>Welcome Back!</Text>
-                <Text style={[styles.subheading,{color: subheadingColor}]}>Login to continue managing your orders</Text>
+                <Text style={[styles.subheading,{color: subheadingColor}]}>Signin to continue managing your orders</Text>
 
                 <TextInput
                     placeholder="Email Address"
@@ -93,7 +66,7 @@ const Login = () => {
                 />
 
                 <MyButton
-                    title="Login"
+                    title="Signin"
                     backgroundColor="#FF6347"
                     textColor="#fff"
                     onPress={handleLogin}
@@ -107,7 +80,7 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Signin;
 
 const styles = StyleSheet.create({
     container: {

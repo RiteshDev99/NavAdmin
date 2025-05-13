@@ -3,9 +3,7 @@ import MyButton from "@/src/components/ui/button";
 import { useRouter } from "expo-router";
 import {themeColors} from "@/src/constants/color";
 import {useState} from "react";
-import {account} from "@/src/lib/appwrite";
-import {ID} from "appwrite";
-
+import {useAuth} from "@/src/context/authContext";
 
 const SignUp = () => {
 
@@ -14,14 +12,11 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+
+    const {signup } = useAuth();
+
     const handleSignup = async () => {
-        try {
-            await account.create(ID.unique(), email, password, name);
-            Alert.alert("Signup successful! Please log in.");
-            router.replace("/login");
-        } catch (error: any) {
-            Alert.alert("Signup Error", error.message || "Something went wrong");
-        }
+        signup({name, email, password});
     };
 
 
@@ -37,7 +32,7 @@ const SignUp = () => {
 
     const router = useRouter();
     const onRegister = () => {
-        router.navigate("/login");
+        router.navigate("/signin");
     };
 
     return (

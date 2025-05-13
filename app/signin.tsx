@@ -1,6 +1,6 @@
 import React from "react";
 import {SafeAreaView, View, StyleSheet, useColorScheme} from "react-native";
-import Login from "@/src/components/auth/login";
+import Signin from "@/src/components/auth/signin";
 import {themeColors} from "@/src/constants/color";
 
 const Modal = () => {
@@ -10,9 +10,9 @@ const Modal = () => {
             ? themeColors.light.backgroundColor
             : themeColors.dark.backgroundColor;
     return (
-        <SafeAreaView style={[styles.safeArea,{backgroundColor: backgroundColor} ]}>
+        <SafeAreaView style={[styles.safeArea,{backgroundColor: backgroundColor}]}>
             <View style={styles.container}>
-                <Login />
+                <Signin />
             </View>
         </SafeAreaView>
     );
