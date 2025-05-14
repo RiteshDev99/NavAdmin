@@ -3,7 +3,7 @@ import React from "react";
 import {View, Text, StyleSheet,} from "react-native";
 import MyButton from "@/src/components/ui/button";
 import {useAuth} from "@/src/context/authContext";
-import {useRouter} from "expo-router";
+
 
 
 

@@ -1,130 +1,112 @@
-import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
-import {ActivityIndicator, Alert, SafeAreaView, Text} from 'react-native';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { ActivityIndicator, Alert, SafeAreaView } from 'react-native';
 import { account } from "@/src/lib/appwrite";
 import { router } from "expo-router";
-import {ID, Models} from "appwrite";
+import { ID, Models } from "appwrite";
 
 interface AuthContextType {
-    user: any;
-    session: any;
-    signin: (params: LoginParams) => Promise<void>;
+    user: Models.User<Models.Preferences> | null;
+    session: Models.Session | null;
+    signin: (params: AuthParams) => Promise<void>;
     signup: (params: SignupParams) => Promise<void>;
     signout: () => Promise<void>;
 }
 
-interface SigninParams {
-    email: string;
-    password: string;
-}
 interface SignupParams {
-    name:string;
+    name: string;
     email: string;
     password: string;
 }
-interface LoginParams {
+
+interface AuthParams {
     email: string;
     password: string;
 }
+
 interface AuthProviderProps {
     children: ReactNode;
-
 }
-
-
-
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<any>(null);
-    const [session, setSession] = useState<any>(null);
-
+    const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+    const [session, setSession] = useState<Models.Session | null>(null);
 
     useEffect(() => {
         init();
-    },[])
-
-
+    }, []);
 
     const init = async () => {
-        checkAuth();
-    }
-
-    const checkAuth = async () => {
-
         try {
+            const currentSession = await account.getSession('current');
+            const currentUser = await account.get();
 
-            const responseSession = await  account.getSession('current');
-            setSession(responseSession);
-
-            const responseUser = await account.get();
-            setUser(responseUser)
-
-
-        } catch ( error ) {
-            console.log(error);
+            setSession(currentSession);
+            setUser(currentUser);
+        } catch (error) {
+            console.log("Auth check error:", error);
             setSession(null);
             setUser(null);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    }
-
+    };
 
     const signup = async ({ name, email, password }: SignupParams) => {
         try {
             await account.create(ID.unique(), email, password, name);
-            Alert.alert("Signup successful! Please log in.");
+            Alert.alert("Signup successful!", "Please log in.");
             router.replace("/signin");
         } catch (error: any) {
             Alert.alert("Signup Error", error.message || "Something went wrong");
         }
-    }
+    };
 
-
-    const signin = async ({ email, password }: SigninParams)  => {
+    const signin = async ({ email, password }: AuthParams) => {
         setLoading(true);
         try {
-            try {
-                await account.deleteSession('current');
-            } catch (error) {
-            }
-            const responseSession = await account.createEmailPasswordSession(email, password);
-            const responseUser = await account.get();
+            const newSession = await account.createEmailPasswordSession(email, password);
+            const newUser = await account.get();
 
-            setSession(responseSession);
-            setUser(responseUser);
+            setSession(newSession);
+            setUser(newUser);
 
             router.push("/");
         } catch (error: any) {
-            console.log("Signin Error:", error);
             Alert.alert("Signin Error", error.message || "Something went wrong");
         } finally {
             setLoading(false);
         }
     };
 
-
     const signout = async () => {
         try {
-          await account.deleteSession('current');
+            if (session) {
+                await account.deleteSession("current");
+            }
+        } catch (error: any) {
+            if (error.message?.includes("missing scope")) {
+                console.log("User already logged out.");
+            } else {
+                console.log("Logout Error:", error.message);
+                Alert.alert("Logout Error", error.message || "Something went wrong");
+            }
+        } finally {
             setSession(null);
             setUser(null);
             router.replace("/signin");
-        } catch (error: any) {
-            console.log("Logout Error:", error.message);
         }
     };
 
-
-
-    const contextData: AuthContextType = { user, session, signup , signin, signout };
+    const contextData: AuthContextType = { user, session, signup, signin, signout };
 
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? (
-                <SafeAreaView style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-               <ActivityIndicator size="large" color="#FF6347" />
+                <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color="#FF6347" />
                 </SafeAreaView>
             ) : (
                 children
