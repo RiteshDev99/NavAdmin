@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
-import { Alert, SafeAreaView, Text } from 'react-native';
+import {ActivityIndicator, Alert, SafeAreaView, Text} from 'react-native';
 import { account } from "@/src/lib/appwrite";
 import { router } from "expo-router";
 import {ID} from "appwrite";
@@ -27,6 +27,7 @@ interface LoginParams {
 }
 interface AuthProviderProps {
     children: ReactNode;
+
 }
 
 
@@ -106,7 +107,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     const signout = async () => {
         try {
-            await account.deleteSession("current");
+          await account.deleteSession('current');
             setSession(null);
             setUser(null);
             router.replace("/signin");
@@ -123,7 +124,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         <AuthContext.Provider value={contextData}>
             {loading ? (
                 <SafeAreaView>
-                    <Text>Loading...</Text>
+               <ActivityIndicator size="large" color="#0000ff" style={{flex:1, justifyContent:'center', alignItems:'center'}}/>
                 </SafeAreaView>
             ) : (
                 children

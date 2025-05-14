@@ -1,4 +1,4 @@
-import { Slot } from "expo-router";
+import {Slot, Stack,} from "expo-router";
 import { AuthProvider } from "@/src/context/authContext";
 
 export default function RootLayout() {
@@ -7,7 +7,15 @@ export default function RootLayout() {
   return(
 
       <AuthProvider>
-          <Slot/>
+          <Stack
+              screenOptions={{
+                      animation: 'slide_from_right',
+                      headerShown: false,
+                  }}
+          >
+              <Stack.Screen name="(tabs)" options={{ title: 'Home'}} />
+
+          </Stack>
       </AuthProvider>
   );
 }

@@ -1,13 +1,11 @@
 
 import React from "react";
 import {View, Text, StyleSheet,} from "react-native";
-import {useRouter} from "expo-router";
 import MyButton from "@/src/components/ui/button";
 import {useAuth} from "@/src/context/authContext";
 
 
-export default function Index() {
-    const router = useRouter();
+export default function ProfileTab() {
     const {signout  } = useAuth();
 
     const handleLogout = async () => {

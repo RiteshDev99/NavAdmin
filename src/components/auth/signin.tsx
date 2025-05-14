@@ -23,9 +23,6 @@ const Signin = () => {
     };
 
 
-
-
-
     const backgroundColor =
         colorScheme === 'light'
             ? themeColors.light.backgroundColor
