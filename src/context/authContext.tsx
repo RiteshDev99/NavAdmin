@@ -2,7 +2,7 @@ import React, {createContext, useContext, useState, ReactNode, useEffect} from '
 import {ActivityIndicator, Alert, SafeAreaView, Text} from 'react-native';
 import { account } from "@/src/lib/appwrite";
 import { router } from "expo-router";
-import {ID} from "appwrite";
+import {ID, Models} from "appwrite";
 
 interface AuthContextType {
     user: any;
@@ -37,8 +37,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState(true);
-    const [session, setSession] = useState<any>(null);
     const [user, setUser] = useState<any>(null);
+    const [session, setSession] = useState<any>(null);
 
 
     useEffect(() => {
@@ -123,8 +123,8 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return (
         <AuthContext.Provider value={contextData}>
             {loading ? (
-                <SafeAreaView>
-               <ActivityIndicator size="large" color="#0000ff" style={{flex:1, justifyContent:'center', alignItems:'center'}}/>
+                <SafeAreaView style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+               <ActivityIndicator size="large" color="#FF6347" />
                 </SafeAreaView>
             ) : (
                 children
