@@ -1,28 +1,25 @@
-import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from "react-native";
-import {Feather} from "@expo/vector-icons";
-
-interface FoodCardProps {
+import React, {useRef} from 'react';
+import {StyleSheet, Text, View, Image, Pressable} from "react-native";
+import RBSheet from 'react-native-raw-bottom-sheet';
+import FoodCardEdit from "@/src/components/ui/foodCardEdit";
+export interface FoodCardProps {
     name:string,
     price:string,
     image:string,
 }
 export const FoodCard = ({name, image, price}:FoodCardProps) => {
+    // @ts-ignore
+    const refRBSheet = useRef<RBSheet | null>(null);
     return(
-        <View style={styles.container}>
+        <>
+        <Pressable style={styles.container}
+                   onPress={() => refRBSheet.current.open()}
+        >
             <View style={styles.innerContainer}>
                 <Image
                     style={styles.foodImage}
                     source={{ uri: image }}
                 />
-            </View>
-            <View style={styles.editIcon}>
-                <TouchableOpacity
-                    onPress={() => {}}
-
-                >
-                    <Feather size={18} name="edit" color={'#fff'} />
-                </TouchableOpacity>
             </View>
             <View style={styles.detailContainer}>
                 <Text style={styles.priceText}>{price}</Text>
@@ -31,16 +28,38 @@ export const FoodCard = ({name, image, price}:FoodCardProps) => {
                         {name}
                     </Text>
             </View>
+        </Pressable>
+    <RBSheet
+        ref={refRBSheet}
+        height={550}
+        openDuration={550}
+        closeDuration={550}
+        customStyles={{
+            container: [styles.sheetContainer,],
+            wrapper: styles.sheetWrapper,
+        }}>
+        <View style={styles.header}>
+            <Text style={styles.headerText}>
+                Edit Food
+            </Text>
         </View>
+        <View style={styles.detailsSheet}>
+                <FoodCardEdit
+                    name={name}
+                    image={image}
+                    price={price}
+                />
+        </View>
+    </RBSheet>
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        height:195,
+        height:185,
         width:175,
         borderWidth:1,
-        // borderColor:"rgba(44,62,80,0.29)",
         borderColor:"rgba(255,99,71,0.8)",
         borderRadius:13,
         overflow:'hidden',
@@ -57,18 +76,6 @@ const styles = StyleSheet.create({
         width:'100%',
         resizeMode:"cover",
     },
-    editIcon:{
-        height:40,
-        width:40,
-        borderRadius:25,
-        backgroundColor:"rgba(255,99,71,0.8)",
-        justifyContent:"center",
-        alignItems:"center",
-        position:"absolute",
-        top:106,
-        right:3,
-        zIndex:10,
-    },
     detailContainer:{
         flex:1,
         backgroundColor: '#FF6347',
@@ -80,18 +87,16 @@ const styles = StyleSheet.create({
 
     },
     foodName:{
-        fontSize:16,
+        fontSize:14,
         fontWeight: "600",
         textAlign:"center",
         marginTop:2,
         marginBottom:2,
-        // color:"rgba(255,99,71,0.8)",
         color: '#F1F1F1'
     },
     priceText:{
-        fontSize:16,
+        fontSize:14,
         fontWeight:"bold",
-        // color:"rgba(255,99,71,0.8)",
         color: '#F1F1F1'
     },
     innerEditContainer: {
@@ -103,4 +108,33 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
         borderRadius: 8,
     },
+    sheetContainer: {
+        borderTopLeftRadius: 20,
+        backgroundColor:'#FFF5F0',
+        borderTopRightRadius: 20,
+    },
+    sheetWrapper: {
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    },
+    postName: {
+        fontSize: 18,
+        fontWeight: 'semibold',
+    },
+    header:{
+       height:50,
+        width:'100%',
+        backgroundColor:'#FF6347',
+        flexDirection:"row",
+        alignItems:"center",
+    },
+    headerText:{
+        fontSize:17,
+        fontWeight:"semibold",
+        paddingHorizontal:12,
+        paddingVertical:12,
+        color: '#F1F1F1'
+    },
+    detailsSheet:{
+        flex:1,
+    }
 })

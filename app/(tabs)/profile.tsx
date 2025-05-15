@@ -3,6 +3,7 @@ import React from "react";
 import {View, Text, StyleSheet,} from "react-native";
 import MyButton from "@/src/components/ui/button";
 import {useAuth} from "@/src/context/authContext";
+import {StatusBar} from "expo-status-bar";
 
 
 
@@ -16,6 +17,7 @@ export default function ProfileTab() {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="dark" backgroundColor="#FFF5F0" />
             <Text style={styles.text}>Your Account </Text>
             <MyButton
                 title="Logout"
