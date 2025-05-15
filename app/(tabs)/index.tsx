@@ -11,6 +11,7 @@ export default function DashBoardTab() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#FFF5F0',
         justifyContent: 'center',
         alignItems: 'center',
     },

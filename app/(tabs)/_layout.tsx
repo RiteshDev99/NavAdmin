@@ -3,7 +3,12 @@ import {AntDesign, EvilIcons, MaterialCommunityIcons} from "@expo/vector-icons";
 
 export default function TabLayout() {
     return (
-        <Tabs screenOptions={{ tabBarActiveTintColor: '#FF6347', headerShown: false }}>
+        <Tabs screenOptions={{ tabBarActiveTintColor: '#FF6347', headerShown: false,
+            tabBarStyle: {
+                backgroundColor: '#FFF5F0',
+            },
+
+        }}>
             <Tabs.Screen
                 name="index"
                 options={{
