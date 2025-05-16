@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import {StatusBar} from "expo-status-bar";
+import {SafeAreaView} from "react-native-safe-area-context";
 
 export default function DashBoardTab() {
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <StatusBar style="dark" backgroundColor="#FFF5F0" />
             <Text style={{fontSize:25, fontWeight:'bold', fontFamily:'fontVariant' }}>Welcome to DashBoard</Text>
-        </View>
+        </SafeAreaView>
     );
 }
 
@@ -14,7 +15,5 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF5F0',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });

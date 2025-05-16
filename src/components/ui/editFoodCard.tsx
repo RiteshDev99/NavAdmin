@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet} from "react-native";
 import {FoodCardProps} from "@/src/components/ui/foodCard";
 import {Feather} from "@expo/vector-icons";
-
- const FoodCardEdit = ({name, image, price}:FoodCardProps) => {
+import RBSheet from "react-native-raw-bottom-sheet";
+ const EditFoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) => {
      const [priceText, onChangeText] = React.useState(price);
      const [nameText, onChangeNameText] = React.useState(name);
+     // @ts-ignore
+     const refRBSheet = useRef<RBSheet | null>(null);
     return(
+        <>
         <View style={[styles.EditContainer]}>
             <View style={[styles.imageCon]}>
                 <View style={styles.upperImgBox}>
@@ -18,7 +21,14 @@ import {Feather} from "@expo/vector-icons";
                     </View>
                     <View style={styles.EditBox}>
                         <View style={styles.changeImg}>
-                            <TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    refRBSheet.current.open()
+                                    
+                            
+                            }
+
+                            >
                                 <Feather size={18} name="edit" color={'#fff'} />
                             </TouchableOpacity>
                         </View>
@@ -39,7 +49,14 @@ import {Feather} from "@expo/vector-icons";
                     </View>
                 </View>
                 <View style={styles.ProductPrice}>
-                    <Text style={styles.Heading}>Food Price </Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (currentCloseSheet) currentCloseSheet(); 
+                        }}
+                    >
+                        <Text style={styles.Heading}>Food Price </Text>
+
+                    </TouchableOpacity>
                     <View style={styles.textInput}>
                         <TextInput
                             style={styles.input}
@@ -67,9 +84,28 @@ import {Feather} from "@expo/vector-icons";
                 </View>
             </View>
         </View>
+
+            <RBSheet
+                ref={refRBSheet}
+                height={350}
+                openDuration={550}
+                closeDuration={550}
+                customStyles={{
+                    container: [styles.sheetContainer,],
+                    wrapper: styles.sheetWrapper,
+                }}>
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>
+                        Edit Image
+                    </Text>
+                </View>
+                <View style={styles.detailsSheet}>
+                </View>
+            </RBSheet>
+        </>
     )
 }
-export default FoodCardEdit;
+export default EditFoodCard;
  
  
  const styles = StyleSheet.create({
@@ -192,4 +228,34 @@ export default FoodCardEdit;
          shadowRadius: 3,
          elevation: 5,
      },
+
+     sheetContainer: {
+         borderTopLeftRadius: 20,
+         backgroundColor:'#FFF5F0',
+         borderTopRightRadius: 20,
+     },
+     sheetWrapper: {
+         backgroundColor: 'rgba(0, 0, 0, 0.3)',
+     },
+     postName: {
+         fontSize: 18,
+         fontWeight: 'semibold',
+     },
+     header:{
+         height:50,
+         width:'100%',
+         backgroundColor:'#FF6347',
+         flexDirection:"row",
+         alignItems:"center",
+     },
+     headerText:{
+         fontSize:17,
+         fontWeight:"semibold",
+         paddingHorizontal:12,
+         paddingVertical:12,
+         color: '#F1F1F1'
+     },
+     detailsSheet:{
+         flex:1,
+     }
  })

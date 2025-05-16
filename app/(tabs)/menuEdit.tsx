@@ -8,7 +8,7 @@ export default function MenuEditTab() {
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark" backgroundColor="#FFF5F0" />
             <ScrollView contentContainerStyle={styles.innerContainer}>
-                {Array.from({ length: 10}).map((_, index) => (
+                {Array.from({ length: 30}).map((_, index) => (
                     <FoodCard
                         key={index}
                         name={'Egg Roll'}

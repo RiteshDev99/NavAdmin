@@ -1,15 +1,17 @@
 import React, {useRef} from 'react';
-import {StyleSheet, Text, View, Image, Pressable} from "react-native";
+import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import FoodCardEdit from "@/src/components/ui/foodCardEdit";
+import EditFoodCard from "@/src/components/ui/editFoodCard";
 export interface FoodCardProps {
     name:string,
     price:string,
     image:string,
+    currentCloseSheet?:()=>void,
 }
-export const FoodCard = ({name, image, price}:FoodCardProps) => {
+export const FoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) => {
     // @ts-ignore
     const refRBSheet = useRef<RBSheet | null>(null);
+    
     return(
         <>
         <Pressable style={styles.container}
@@ -33,21 +35,34 @@ export const FoodCard = ({name, image, price}:FoodCardProps) => {
         ref={refRBSheet}
         height={550}
         openDuration={550}
+        onClose={() => {
+           refRBSheet.current.close(currentCloseSheet)
+        }}
         closeDuration={550}
         customStyles={{
             container: [styles.sheetContainer,],
             wrapper: styles.sheetWrapper,
         }}>
         <View style={styles.header}>
-            <Text style={styles.headerText}>
-                Edit Food
-            </Text>
+            <TouchableOpacity
+                onPress={() => refRBSheet.current.close()}
+
+            >
+                <Text style={styles.headerText}>
+                    Edit Food
+                </Text>
+            </TouchableOpacity>
+
         </View>
         <View style={styles.detailsSheet}>
-                <FoodCardEdit
+                <EditFoodCard
                     name={name}
                     image={image}
                     price={price}
+                    currentCloseSheet={() => {
+                        console.log("Sheet closed");
+                        // any custom logic like navigation or resetting state
+                    }}
                 />
         </View>
     </RBSheet>
