@@ -2,26 +2,30 @@ import React, {useRef} from 'react';
 import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EditFoodCard from "@/src/components/ui/editFoodCard";
+import {useImages} from "@/src/context/imageContext";
+
 export interface FoodCardProps {
     name:string,
     price:string,
     image:string,
-    currentCloseSheet?:()=>void,
+    sheetClose?:()=>void,
 }
-export const FoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) => {
+export const FoodCard = ({name, image, price,sheetClose}:FoodCardProps) => {
     // @ts-ignore
     const refRBSheet = useRef<RBSheet | null>(null);
-    
+    const [closeSheet, setCloseSheet] = React.useState(false);
+     const {imageUri} = useImages();
     return(
         <>
         <Pressable style={styles.container}
                    onPress={() => refRBSheet.current.open()}
         >
             <View style={styles.innerContainer}>
-                <Image
-                    style={styles.foodImage}
-                    source={{ uri: image }}
-                />
+                {imageUri ? (
+                    <Image source={{ uri: imageUri }} style={styles.foodImage} />
+                ) : (
+                    <Image source={{ uri: image }} style={styles.foodImage} />
+                )}
             </View>
             <View style={styles.detailContainer}>
                 <Text style={styles.priceText}>{price}</Text>
@@ -35,9 +39,7 @@ export const FoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) 
         ref={refRBSheet}
         height={550}
         openDuration={550}
-        onClose={() => {
-           refRBSheet.current.close(currentCloseSheet)
-        }}
+        onClose={() => closeSheet}
         closeDuration={550}
         customStyles={{
             container: [styles.sheetContainer,],
@@ -59,10 +61,11 @@ export const FoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) 
                     name={name}
                     image={image}
                     price={price}
-                    currentCloseSheet={() => {
-                        console.log("Sheet closed");
-                        // any custom logic like navigation or resetting state
-                    }}
+                    sheetClose={() => {
+                        refRBSheet.current?.close();
+                        setCloseSheet(true);
+                    }
+                    }
                 />
         </View>
     </RBSheet>
@@ -75,7 +78,8 @@ const styles = StyleSheet.create({
         height:185,
         width:175,
         borderWidth:1,
-        borderColor:"rgba(255,99,71,0.8)",
+        // borderColor:"rgba(255,99,71,0.8)",
+        borderColor:'#ccc',
         borderRadius:13,
         overflow:'hidden',
     },
@@ -93,7 +97,9 @@ const styles = StyleSheet.create({
     },
     detailContainer:{
         flex:1,
-        backgroundColor: '#FF6347',
+        // backgroundColor: '#FF6347',
+        // backgroundColor:'rgba(44,62,80,0.42)',
+        backgroundColor:'rgba(44,62,80,0.93)',
         flexDirection:"row",
         justifyContent:"space-between",
         alignItems:"center",
@@ -138,7 +144,8 @@ const styles = StyleSheet.create({
     header:{
        height:50,
         width:'100%',
-        backgroundColor:'#FF6347',
+        // backgroundColor:'#FF6347',
+        backgroundColor:'rgba(44,62,80,0.93)',
         flexDirection:"row",
         alignItems:"center",
     },

@@ -3,36 +3,40 @@ import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet} from "react-
 import {FoodCardProps} from "@/src/components/ui/foodCard";
 import {Feather} from "@expo/vector-icons";
 import RBSheet from "react-native-raw-bottom-sheet";
- const EditFoodCard = ({name, image, price, currentCloseSheet}:FoodCardProps) => {
+import {EditImage} from "@/src/components/ui/editImage";
+import {useImages} from "@/src/context/imageContext";
+ const EditFoodCard = ({name, image, price, sheetClose}:FoodCardProps) => {
      const [priceText, onChangeText] = React.useState(price);
      const [nameText, onChangeNameText] = React.useState(name);
      // @ts-ignore
      const refRBSheet = useRef<RBSheet | null>(null);
+     const {imageUri} = useImages();
     return(
         <>
         <View style={[styles.EditContainer]}>
             <View style={[styles.imageCon]}>
                 <View style={styles.upperImgBox}>
                     <View style={styles.ImageBor}>
-                        <Image
-                            source={{ uri: image }} style={styles.imageEdit}
-
-                        />
+                        {imageUri ? (
+                            <Image source={{ uri: imageUri }} style={styles.imageEdit} />
+                        ) : (
+                            <Image source={{ uri: image }} style={styles.imageEdit} />
+                        )}
                     </View>
-                    <View style={styles.EditBox}>
+                    <TouchableOpacity style={styles.EditBox}
+                                      onPress={sheetClose}
+
+                    >
                         <View style={styles.changeImg}>
                             <TouchableOpacity
                                 onPress={() =>
                                     refRBSheet.current.open()
-                                    
-                            
-                            }
-
+                                }
                             >
                                 <Feather size={18} name="edit" color={'#fff'} />
                             </TouchableOpacity>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.itemsCon}>
@@ -50,9 +54,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
                 </View>
                 <View style={styles.ProductPrice}>
                     <TouchableOpacity
-                        onPress={() => {
-                            if (currentCloseSheet) currentCloseSheet(); 
-                        }}
+                        onPress={sheetClose}
                     >
                         <Text style={styles.Heading}>Food Price </Text>
 
@@ -99,8 +101,10 @@ import RBSheet from "react-native-raw-bottom-sheet";
                         Edit Image
                     </Text>
                 </View>
-                <View style={styles.detailsSheet}>
-                </View>
+              
+                    <EditImage/>
+
+               
             </RBSheet>
         </>
     )
@@ -138,7 +142,8 @@ export default EditFoodCard;
          width: 200,
          borderWidth: 1,
          borderRadius: 12,
-         borderColor:"rgba(255,99,71,0.8)",
+         // borderColor:"rgba(255,99,71,0.8)",
+         borderColor:'#ccc',
          alignItems: 'center',
          justifyContent: 'center',
          position: 'relative',
@@ -192,7 +197,8 @@ export default EditFoodCard;
      textInput: {
          height: 40,
          width: '100%',
-         borderColor:"rgba(255,99,71,0.8)",
+         // borderColor:"rgba(255,99,71,0.8)",
+         borderColor:'#ccc',
          borderBottomWidth: 1,
          borderRadius: 8,
          paddingHorizontal: 10,
@@ -244,7 +250,8 @@ export default EditFoodCard;
      header:{
          height:50,
          width:'100%',
-         backgroundColor:'#FF6347',
+         // backgroundColor:'#FF6347',
+         backgroundColor:'rgba(44,62,80,0.93)',
          flexDirection:"row",
          alignItems:"center",
      },
@@ -255,7 +262,5 @@ export default EditFoodCard;
          paddingVertical:12,
          color: '#F1F1F1'
      },
-     detailsSheet:{
-         flex:1,
-     }
+    
  })
