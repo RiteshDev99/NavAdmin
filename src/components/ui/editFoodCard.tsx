@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef} from 'react';
 import {
     View,
     Image,
@@ -25,17 +25,14 @@ const EditFoodCard = () => {
         setFoodPrice,
         closeSheet
     } = useImages();
-
-    const [loading, setLoading] = useState(false);
+    
     const refRBSheet = useRef<RBSheetRef | null>(null);
 
     function handleSave() {
-        setLoading(true);
         try {
             refRBSheet.current?.close();
         } catch (error) {
             console.log((error as Error).message);
-            setLoading(false);
         }
     }
 

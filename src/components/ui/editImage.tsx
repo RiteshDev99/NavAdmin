@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import {useImages} from "@/src/context/menuEditContext";
@@ -19,6 +19,9 @@ export const EditImage = () => {
 
         if (!result.canceled) {
             setImageUri(result.assets[0].uri);
+            console.log('image uploaded successfully')
+            Alert.alert("Image Uploaded",  "Image uploaded successfully🎉",);
+
         }
     };
     
@@ -67,7 +70,7 @@ const styles = StyleSheet.create({
     },
     postName: {
         fontSize: 18,
-        fontWeight: '600', // Corrected from 'semibold'
+        fontWeight: '600',
         color: '#333',
     },
 });
