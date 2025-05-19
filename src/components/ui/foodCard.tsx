@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EditFoodCard from "@/src/components/ui/editFoodCard";
-import {useImages} from "@/src/context/imageContext";
+import {useImages} from "@/src/context/menuEditContext";
 
 export interface FoodCardProps {
     name:string,
@@ -10,11 +10,10 @@ export interface FoodCardProps {
     image:string,
     sheetClose?:()=>void,
 }
-export const FoodCard = ({name, image, price,sheetClose}:FoodCardProps) => {
+export const FoodCard = () => {
     // @ts-ignore
     const refRBSheet = useRef<RBSheet | null>(null);
-    const [closeSheet, setCloseSheet] = React.useState(false);
-     const {imageUri} = useImages();
+     const {imageUri, foodName, foodPrice, closeSheet} = useImages();
     return(
         <>
         <Pressable style={styles.container}
@@ -24,14 +23,14 @@ export const FoodCard = ({name, image, price,sheetClose}:FoodCardProps) => {
                 {imageUri ? (
                     <Image source={{ uri: imageUri }} style={styles.foodImage} />
                 ) : (
-                    <Image source={{ uri: image }} style={styles.foodImage} />
+                    <Image source={{ uri: '' }} style={styles.foodImage} />
                 )}
             </View>
             <View style={styles.detailContainer}>
-                <Text style={styles.priceText}>{price}</Text>
+                <Text style={styles.priceText}>{foodPrice}</Text>
               
                     <Text style={styles.foodName}>
-                        {name}
+                        {foodName}
                     </Text>
             </View>
         </Pressable>
@@ -39,7 +38,6 @@ export const FoodCard = ({name, image, price,sheetClose}:FoodCardProps) => {
         ref={refRBSheet}
         height={550}
         openDuration={550}
-        onClose={() => closeSheet}
         closeDuration={550}
         customStyles={{
             container: [styles.sheetContainer,],
@@ -58,14 +56,6 @@ export const FoodCard = ({name, image, price,sheetClose}:FoodCardProps) => {
         </View>
         <View style={styles.detailsSheet}>
                 <EditFoodCard
-                    name={name}
-                    image={image}
-                    price={price}
-                    sheetClose={() => {
-                        refRBSheet.current?.close();
-                        setCloseSheet(true);
-                    }
-                    }
                 />
         </View>
     </RBSheet>

@@ -1,118 +1,140 @@
-import React, {useRef} from 'react';
-import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet} from "react-native";
-import {FoodCardProps} from "@/src/components/ui/foodCard";
-import {Feather} from "@expo/vector-icons";
+import React, { useRef, useState } from 'react';
+import {
+    View,
+    Image,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet
+} from "react-native";
+import { Feather } from "@expo/vector-icons";
 import RBSheet from "react-native-raw-bottom-sheet";
-import {EditImage} from "@/src/components/ui/editImage";
-import {useImages} from "@/src/context/imageContext";
- const EditFoodCard = ({name, image, price, sheetClose}:FoodCardProps) => {
-     const [priceText, onChangeText] = React.useState(price);
-     const [nameText, onChangeNameText] = React.useState(name);
-     // @ts-ignore
-     const refRBSheet = useRef<RBSheet | null>(null);
-     const {imageUri} = useImages();
-    return(
+import { EditImage } from "@/src/components/ui/editImage";
+import { useImages } from "@/src/context/menuEditContext";
+type RBSheetRef = {
+    open: () => void;
+    close: () => void;
+};
+
+const EditFoodCard = () => {
+    const {
+        imageUri,
+        foodName,
+        setFoodName,
+        foodPrice,
+        setFoodPrice,
+        closeSheet
+    } = useImages();
+
+    const [loading, setLoading] = useState(false);
+    const refRBSheet = useRef<RBSheetRef | null>(null);
+
+    function handleSave() {
+        setLoading(true);
+        try {
+            refRBSheet.current?.close();
+        } catch (error) {
+            console.log((error as Error).message);
+            setLoading(false);
+        }
+    }
+
+   
+
+    return (
         <>
-        <View style={[styles.EditContainer]}>
-            <View style={[styles.imageCon]}>
-                <View style={styles.upperImgBox}>
-                    <View style={styles.ImageBor}>
-                        {imageUri ? (
-                            <Image source={{ uri: imageUri }} style={styles.imageEdit} />
-                        ) : (
-                            <Image source={{ uri: image }} style={styles.imageEdit} />
-                        )}
-                    </View>
-                    <TouchableOpacity style={styles.EditBox}
-                                      onPress={sheetClose}
-
-                    >
-                        <View style={styles.changeImg}>
-                            <TouchableOpacity
-                                onPress={() =>
-                                    refRBSheet.current.open()
-                                }
-                            >
-                                <Feather size={18} name="edit" color={'#fff'} />
-                            </TouchableOpacity>
+            <View style={styles.EditContainer}>
+                <View style={styles.imageCon}>
+                    <View style={styles.upperImgBox}>
+                        <View style={styles.ImageBor}>
+                            <Image
+                                source={{ uri: imageUri }}
+                                style={styles.imageEdit}
+                            />
                         </View>
-                    </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.EditBox}>
+                            <View style={styles.changeImg}>
+                                <TouchableOpacity
+                                    onPress={() => refRBSheet.current?.open()}
+                                >
+                                    <Feather size={18} name="edit" color={'#fff'} />
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.itemsCon}>
+                    <View style={styles.ProductName}>
+                        <Text style={styles.Heading}>Food Name</Text>
+                        <View style={styles.textInput}>
+                            <TextInput
+                                style={styles.input}
+                                value={foodName}
+                                onChangeText={setFoodName}
+                                placeholder="Enter product name"
+                                placeholderTextColor="#aaa"
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.ProductPrice}>
+                        <Text style={styles.Heading}>Food Price</Text>
+                        <View style={styles.textInput}>
+                            <TextInput
+                                style={styles.input}
+                                value={foodPrice}
+                                onChangeText={setFoodPrice}
+                                placeholder="Enter price"
+                                keyboardType="numeric"
+                                placeholderTextColor="#aaa"
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.btnContainer}>
+                        <TouchableOpacity onPress={refRBSheet.current?.close}>
+                            <View style={[styles.btn, styles.btnCancelBg]}>
+                                <Text style={styles.btnText}>Cancel</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={handleSave}>
+                            <View style={[styles.btn, styles.btnSaveBg]}>
+                                <Text style={styles.btnText}>Save</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-            <View style={styles.itemsCon}>
-                <View style={styles.ProductName}>
-                    <Text style={styles.Heading}>Food Name</Text>
-                    <View style={styles.textInput}>
-                        <TextInput
-                            style={styles.input}
-                            value={nameText}
-                            onChangeText={onChangeNameText}
-                            placeholder="Enter product name"
-                            placeholderTextColor="#aaa"
-                        />
-                    </View>
-                </View>
-                <View style={styles.ProductPrice}>
-                    <TouchableOpacity
-                        onPress={sheetClose}
-                    >
-                        <Text style={styles.Heading}>Food Price </Text>
-
-                    </TouchableOpacity>
-                    <View style={styles.textInput}>
-                        <TextInput
-                            style={styles.input}
-                            value={priceText}
-                            onChangeText={onChangeText}
-                            placeholder="Enter price"
-                            keyboardType="numeric"
-                            placeholderTextColor="#aaa"
-                        />
-                    </View>
-                </View>
-                <View style={styles.btnContainer}>
-                    <TouchableOpacity
-                    >
-                        <View style={[styles.btn, styles.btnCancelBg]}>
-                            <Text style={styles.btnText}>Cancel</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                    >
-                        <View style={[styles.btn, styles.btnSaveBg]}>
-                            <Text style={styles.btnText}>Save</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </View>
 
             <RBSheet
                 ref={refRBSheet}
                 height={350}
                 openDuration={550}
                 closeDuration={550}
+                onClose={closeSheet}
                 customStyles={{
-                    container: [styles.sheetContainer,],
+                    container: styles.sheetContainer,
                     wrapper: styles.sheetWrapper,
-                }}>
+                }}
+            >
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>
-                        Edit Image
-                    </Text>
+                    <Text style={styles.headerText}>Edit Image</Text>
                 </View>
-              
-                    <EditImage/>
 
-               
+                <EditImage />
             </RBSheet>
         </>
-    )
-}
+    );
+};
+
 export default EditFoodCard;
- 
- 
- const styles = StyleSheet.create({
+
+
+
+const styles = StyleSheet.create({
      EditContainer: {
          height: '81%',
          width: '100%',

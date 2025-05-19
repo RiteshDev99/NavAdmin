@@ -1,6 +1,6 @@
 import { Stack,} from "expo-router";
 import { AuthProvider } from "@/src/context/authContext";
-import {ImageProvider} from "@/src/context/imageContext";
+import {ImageProvider} from "@/src/context/menuEditContext";
 
 export default function RootLayout() {
 

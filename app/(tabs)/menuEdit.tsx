@@ -11,9 +11,6 @@ export default function MenuEditTab() {
                 {Array.from({ length: 30}).map((_, index) => (
                     <FoodCard
                         key={index}
-                        name={'Egg Roll'}
-                        price={'₹40'}
-                        image={'https://ministryofcurry.com/wp-content/uploads/2023/11/Kolkatta-Egg-Roll-4.jpg'}
                     />
                 ))}
             </ScrollView>

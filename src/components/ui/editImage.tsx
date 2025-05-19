@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import {useImages} from "@/src/context/imageContext";
+import {useImages} from "@/src/context/menuEditContext";
 
 export const EditImage = () => {
     const { setImageUri } = useImages();
