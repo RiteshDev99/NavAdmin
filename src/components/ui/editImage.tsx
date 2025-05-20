@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {useImages} from "@/src/context/menuEditContext";
 
 export const EditImage = () => {
-    const { setImageUri } = useImages();
+    const { setImageUri, ImageUpload } = useImages();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -18,10 +18,18 @@ export const EditImage = () => {
         console.log(result);
 
         if (!result.canceled) {
-            setImageUri(result.assets[0].uri);
-            console.log('image uploaded successfully')
-            Alert.alert("Image Uploaded",  "Image uploaded successfully🎉",);
+            const uri = result.assets[0].uri;
+            ImageUpload(uri);
+            setImageUri(uri); 
 
+            try {
+                await ImageUpload(); 
+                console.log('Image uploaded successfully');
+                Alert.alert("Image Uploaded", "Image uploaded successfully 🎉");
+            } catch (error) {
+                console.error('Upload failed:', error);
+                Alert.alert("Upload Failed", "There was a problem uploading the image.");
+            }
         }
     };
     
