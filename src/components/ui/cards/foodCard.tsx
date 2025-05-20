@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import EditFoodCard from "@/src/components/ui/editFoodCard";
+import EditFoodCard from "@/src/components/ui/cards/editFoodCard";
 import {useImages} from "@/src/context/menuEditContext";
 
 export interface FoodCardProps {
@@ -13,7 +13,7 @@ export interface FoodCardProps {
 export const FoodCard = () => {
     // @ts-ignore
     const refRBSheet = useRef<RBSheet | null>(null);
-     const {imageUri, foodName, foodPrice, closeSheet} = useImages();
+     const {imageUri, foodName, foodPrice} = useImages();
     return(
         <>
         <Pressable style={styles.container}
@@ -37,8 +37,8 @@ export const FoodCard = () => {
     <RBSheet
         ref={refRBSheet}
         height={550}
-        openDuration={550}
-        closeDuration={550}
+        openDuration={225}
+        closeDuration={210}
         customStyles={{
             container: [styles.sheetContainer,],
             wrapper: styles.sheetWrapper,

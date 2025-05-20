@@ -1,6 +1,6 @@
 import {StyleSheet, ScrollView} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FoodCard } from '@/src/components/ui/foodCard';
+import { FoodCard } from '@/src/components/ui/cards/foodCard';
 import { StatusBar } from 'expo-status-bar';
 
 export default function MenuEditTab() {

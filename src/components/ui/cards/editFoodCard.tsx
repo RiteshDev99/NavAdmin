@@ -109,8 +109,8 @@ const EditFoodCard = () => {
             <RBSheet
                 ref={refRBSheet}
                 height={350}
-                openDuration={550}
-                closeDuration={550}
+                openDuration={225}
+                closeDuration={200}
                 onClose={closeSheet}
                 customStyles={{
                     container: styles.sheetContainer,
