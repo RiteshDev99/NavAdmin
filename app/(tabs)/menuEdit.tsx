@@ -1,18 +1,34 @@
-import {StyleSheet, ScrollView} from 'react-native';
+import {StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FoodCard } from '@/src/components/ui/cards/foodCard';
 import { StatusBar } from 'expo-status-bar';
+import {useImages} from "@/src/context/menuEditContext";
+import {useEffect} from "react";
 
 export default function MenuEditTab() {
+    const {documents, fetchData,} = useImages();
+
+    useEffect(() => {
+        fetchData();
+        console.log("Fetched documents:", documents);
+    }, []);
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark" backgroundColor="#FFF5F0" />
             <ScrollView contentContainerStyle={styles.innerContainer}>
-                {Array.from({ length: 30}).map((_, index) => (
-                    <FoodCard
-                        key={index}
-                    />
-                ))}
+                {Array.isArray(documents) && documents.length > 0 ? (
+                    documents.map((item) => (
+                        <FoodCard
+                            key={item.$id}
+                            name={item.name}
+                            price={item.price}
+                            image={item.image}
+                        />
+                    ))
+                ) : (
+                  <ActivityIndicator size={'large'}  color="#FFF5F0" />
+
+                )}
             </ScrollView>
         </SafeAreaView>
     );

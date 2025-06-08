@@ -2,63 +2,58 @@ import React, {useRef} from 'react';
 import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import EditFoodCard from "@/src/components/ui/cards/editFoodCard";
-import {useImages} from "@/src/context/menuEditContext";
 
 export interface FoodCardProps {
     name:string,
     price:string,
     image:string,
-    sheetClose?:()=>void,
 }
-export const FoodCard = () => {
+export const FoodCard = ({name,price,image}:FoodCardProps) => {
     // @ts-ignore
     const refRBSheet = useRef<RBSheet | null>(null);
-     const {imageUri, foodName, foodPrice} = useImages();
     return(
         <>
-        <Pressable style={styles.container}
-                   onPress={() => refRBSheet.current.open()}
-        >
-            <View style={styles.innerContainer}>
-                {imageUri ? (
-                    <Image source={{ uri: imageUri }} style={styles.foodImage} />
-                ) : (
-                    <Image source={{ uri: '' }} style={styles.foodImage} />
-                )}
-            </View>
-            <View style={styles.detailContainer}>
-                <Text style={styles.priceText}>{foodPrice}</Text>
-              
-                    <Text style={styles.foodName}>
-                        {foodName}
-                    </Text>
-            </View>
-        </Pressable>
-    <RBSheet
-        ref={refRBSheet}
-        height={550}
-        openDuration={225}
-        closeDuration={210}
-        customStyles={{
-            container: [styles.sheetContainer,],
-            wrapper: styles.sheetWrapper,
-        }}>
-        <View style={styles.header}>
-            <TouchableOpacity
-                onPress={() => refRBSheet.current.close()}
-
+            <Pressable style={styles.container}
+                       onPress={() => refRBSheet.current.open()}
             >
-                <Text style={styles.headerText}>
-                    Edit Food
-                </Text>
-            </TouchableOpacity>
+                <View style={styles.innerContainer}>
 
-        </View>
-        <View style={styles.detailsSheet}>
-                <EditFoodCard
-                />
-        </View>
-    </RBSheet>
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.foodImage} />
+                    ) : (
+                        <View style={[styles.foodImage, { backgroundColor: '#ccc' }]}>
+                            <Text>No Image</Text>
+                        </View>
+                    )}        
+                </View>
+                <View style={styles.detailContainer}>
+                    <Text style={styles.priceText}>{price}</Text>
+                    <Text style={styles.foodName}>{name}</Text>
+                </View>
+            </Pressable>
+            <RBSheet
+                ref={refRBSheet}
+                height={550}
+                openDuration={225}
+                closeDuration={210}
+                customStyles={{
+                    container: [styles.sheetContainer,],
+                    wrapper: styles.sheetWrapper,
+                }}>
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        onPress={() => refRBSheet.current.close()}
+
+                    >
+                        <Text style={styles.headerText}>Edit Food</Text>
+                    </TouchableOpacity>
+
+                </View>
+                <View style={styles.detailsSheet}>
+                    <EditFoodCard
+                    />
+                </View>
+            </RBSheet>
         </>
     )
 }
@@ -132,7 +127,7 @@ const styles = StyleSheet.create({
         fontWeight: 'semibold',
     },
     header:{
-       height:50,
+        height:50,
         width:'100%',
         // backgroundColor:'#FF6347',
         backgroundColor:'rgba(44,62,80,0.93)',

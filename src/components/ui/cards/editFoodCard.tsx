@@ -23,19 +23,26 @@ const EditFoodCard = () => {
         setFoodName,
         foodPrice,
         setFoodPrice,
-        closeSheet
+        CreatePost,
+        UpdatePost,
     } = useImages();
-    
+
     const refRBSheet = useRef<RBSheetRef | null>(null);
-
-    function handleSave() {
-        try {
-            refRBSheet.current?.close();
-        } catch (error) {
-            console.log((error as Error).message);
-        }
+    const handlePost = () => {
+        CreatePost({
+            name:foodName,
+            price:foodPrice,
+            image:imageUri,
+        });
     }
+    
+    const handleUpdatePost = () => {
+        UpdatePost({
+            name:foodName,
+            price:foodPrice,
+        });
 
+    }
    
 
     return (
@@ -91,13 +98,16 @@ const EditFoodCard = () => {
                     </View>
 
                     <View style={styles.btnContainer}>
-                        <TouchableOpacity onPress={refRBSheet.current?.close}>
+                        <TouchableOpacity onPress={()=> handleUpdatePost()}>
                             <View style={[styles.btn, styles.btnCancelBg]}>
                                 <Text style={styles.btnText}>Cancel</Text>
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={handleSave}>
+                        <TouchableOpacity onPress={()=> {
+                            handlePost();
+                            refRBSheet.current?.close();
+                        }}>
                             <View style={[styles.btn, styles.btnSaveBg]}>
                                 <Text style={styles.btnText}>Save</Text>
                             </View>
@@ -111,7 +121,6 @@ const EditFoodCard = () => {
                 height={350}
                 openDuration={225}
                 closeDuration={200}
-                onClose={closeSheet}
                 customStyles={{
                     container: styles.sheetContainer,
                     wrapper: styles.sheetWrapper,
@@ -128,8 +137,6 @@ const EditFoodCard = () => {
 };
 
 export default EditFoodCard;
-
-
 
 const styles = StyleSheet.create({
      EditContainer: {
