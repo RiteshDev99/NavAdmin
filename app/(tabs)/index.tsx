@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
        height: 100,
         width: '100%',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
     appImage:{
        height:100,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     dashboardCard:{
         flexDirection: 'row',
         flexWrap: 'wrap',
-        padding:20,
+        paddingTop:20,
         justifyContent: 'center',
         gap:15,
     },
